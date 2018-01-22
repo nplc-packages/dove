@@ -20,6 +20,20 @@ function _M:init(rule)
     return self
 end
 
+function _M:update_origin()
+    self.origin = {
+        self.method,
+        self.url,
+        self.controller,
+        self.action,
+        self.desc
+    }
+end
+
+function _M:update_regex()
+    self.regex = RegexHelper.formulize(self.url)
+end
+
 function _M:generate_url(params)
     local url = self.url
     for key in self.url:gmatch(":%w*id") do

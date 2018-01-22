@@ -114,9 +114,6 @@ local function build_rest_actions(only, except, resource, resources_stack, names
     end
 
     if (only ~= nil) then
-        if (next(only) == nil) then
-            return {}
-        end
         for k, _ in pairs(actionsMap) do
             for _, v in pairs(only) do
                 if (k ~= v) then
@@ -131,7 +128,6 @@ local function build_rest_actions(only, except, resource, resources_stack, names
         end
     end
 
-    local result = {}
     local url = nil
     local method = nil
     local controller = nil
@@ -203,7 +199,11 @@ local function build_rules(rules)
 end
 
 function _M.add_rule(rule)
-    table_insert(_M.rules, Rule:new():init(rule))
+    _M.add(Rule:new():init(rule))
+end
+
+function _M.add(rule)
+    table_insert(_M.rules, rule)
 end
 
 function _M.init(source)
