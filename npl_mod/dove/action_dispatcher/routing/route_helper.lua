@@ -2,6 +2,20 @@
 title: route helper
 author: chenqh
 date: 2018/1/21
+desc:
+Generally you should use namesapce, scope and resource to build your routes.
+But route helper also support a way to add url or rule directlly with url/rule helper,
+Please don't use it inside namespace or resource, the wrapper magic won't happen to the directly rule.
+
+local RouteHelper = commonlib.gettable("ActionDispatcher.Routing.RouteHelper")
+local resources = RouteHelper.resources
+local namespace = RouteHelper.namespace
+local scope = RouteHelper.scope
+local url = RouteHelper.url
+local rule = RouteHelper.rule
+
+RouteHelper.route
+
 ]]
 _M = commonlib.gettable("ActionDispatcher.Routing.RouteHelper")
 local Route = commonlib.gettable("ActionDispatcher.Routing.Route")
@@ -24,6 +38,7 @@ local function join_rules(rules_array)
     return rules
 end
 
+-- merge and add all rules to Route
 function _M.route(...)
     local rules = join_rules({...})
     for _, rule in ipairs(rules) do
@@ -35,6 +50,7 @@ function _M.route(...)
     end
 end
 
+-- Namespace is a wrapper of resources, which will add namespace to url and controller automatically
 function _M.namespace(name, rules)
     rules = join_rules(rules)
     for i = 1, #rules do
@@ -45,7 +61,19 @@ function _M.namespace(name, rules)
     return rules
 end
 
-_M.scope = _M.namespace
+-- Scope looks like a configable namespace, if you enable all options, it will behave same as namespace.
+-- It will add scope name to url by default, but you need to config it to add scope name to controller.
+function _M.scope(name, options, rules)
+    rules = join_rules(rules)
+    for i = 1, #rules do
+        rules[i].url = format("%s/%s", name, rules[i].url)
+        if options.controller then
+            rules[i].controller = format("%s.%s", StringHelper.capitalize(name), rules[i].controller)
+        end
+    end
+
+    return rules
+end
 
 local function url_tail(action, isMember)
     if (action == "index" or action == "create") then
@@ -150,6 +178,14 @@ local function build_resource(resource, options)
     return rules
 end
 
+-- Resources is the core method to generate rules, it will generate restful rules by default.
+-- restful action: index, show, create, delete, update, add, edit
+-- options:
+-- only@table option: define a collection of restful actions, and drop the others
+-- except@table option: define a collection of restful actions which you don't need.
+-- members@table option: define a collection of resource action, focus on a particular resource.
+-- collections@table option: define a collection of resources action.
+-- run route_helper_spec to see the details
 function _M.resources(resource, options, rules)
     rules = join_rules(rules)
     for i = 1, #rules do
@@ -160,8 +196,10 @@ end
 
 _M.resource = _M.resources
 
-function _M.rule()
+-- rule will be added to Route directly
+function _M.rule(method, url, controller, action, desc)
+    Route.add_rule({method, url, controller, action, desc})
+    return {}
 end
 
-function _M.url()
-end
+_M.url = _M.rule
