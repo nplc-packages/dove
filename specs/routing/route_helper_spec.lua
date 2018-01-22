@@ -1,5 +1,4 @@
-telescope.load_contexts("specs/spec_helper.lua")
--- NPL.load("specs/spec_helper")
+NPL.load("specs/spec_helper.lua")
 
 local RouteHelper = commonlib.gettable("ActionDispatcher.Routing.RouteHelper")
 local Route = commonlib.gettable("ActionDispatcher.Routing.Route")

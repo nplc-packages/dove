@@ -3,8 +3,7 @@ title: Test Pluralize.lua
 author: chenqh
 date: 2017/11/23
 ]]
-telescope.load_contexts("specs/spec_helper.lua")
--- NPL.load("../spec_helper")
+NPL.load("specs/spec_helper.lua")
 
 local Pluralize = commonlib.gettable("Dove.Utils.Pluralize")
 
@@ -612,14 +611,18 @@ describe(
             local plural = test_case[2]
             context(
                 format("single: %s, plural: %s", single, plural),
-                function ()
+                function()
                     it(
                         "should match plural",
-                        function() assert_equal(Pluralize.plural(single), plural) end
+                        function()
+                            assert_equal(Pluralize.plural(single), plural)
+                        end
                     )
                     it(
                         "should match single",
-                        function() assert_equal(Pluralize.singular(plural), single) end
+                        function()
+                            assert_equal(Pluralize.singular(plural), single)
+                        end
                     )
                 end
             )
@@ -630,11 +633,15 @@ describe(
             function()
                 it(
                     "words should be plural",
-                    function() assert_equal(Pluralize.is_plural("words"), true) end
+                    function()
+                        assert_equal(Pluralize.is_plural("words"), true)
+                    end
                 )
                 it(
                     "word should not be plural",
-                    function() assert_equal(Pluralize.is_plural("word"), false) end
+                    function()
+                        assert_equal(Pluralize.is_plural("word"), false)
+                    end
                 )
             end
         )
@@ -644,11 +651,15 @@ describe(
             function()
                 it(
                     "words should not be single",
-                    function() assert_equal(Pluralize.is_singular("words"), false) end
+                    function()
+                        assert_equal(Pluralize.is_singular("words"), false)
+                    end
                 )
                 it(
                     "word should be single",
-                    function() assert_equal(Pluralize.is_singular("word"), true) end
+                    function()
+                        assert_equal(Pluralize.is_singular("word"), true)
+                    end
                 )
             end
         )
