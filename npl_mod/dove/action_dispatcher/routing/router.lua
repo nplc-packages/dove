@@ -27,7 +27,7 @@ function _M.url_for(url, method, params)
     if (type(url) ~= "string") then
         error("invalid path")
     end
-    local rule = Route.find_rule(url, method, params)
+    local rule = Route.find_rule(method, url, params)
     if (not rule) then
         error("Invalid params to generate url")
     end

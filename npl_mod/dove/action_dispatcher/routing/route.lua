@@ -94,7 +94,7 @@ function _M.parse(method, url)
     error("Invalid url: " .. url)
 end
 
-function _M.find_rule(url, method)
+function _M.find_rule(method, url)
     local temp = StringHelper.split(url, "[^#]+")
     local rule = nil
     if (#temp == 2) then -- controller#action

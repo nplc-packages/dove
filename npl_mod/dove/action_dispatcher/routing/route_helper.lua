@@ -76,16 +76,16 @@ function _M.scope(name, options, rules)
 end
 
 local function url_tail(action, isMember)
-    if (action == "index" or action == "create") then
+    if action == "index" or action == "create" then
         return nil
     end
-    if (action == "show" or action == "delete" or action == "update") then
+    if action == "show" or action == "delete" or action == "update" then
         return ":id"
     end
-    if (action == "edit" or isMember == true) then
+    if action == "edit" or isMember == true then
         return format(":id/%s", action)
     end
-    if (action == "add" or isMember == false) then
+    if action == "add" or isMember == false then
         return action
     end
     error(format("Invalid action setting: %s", action))
@@ -120,16 +120,24 @@ local function build_rest_actions(only, except, resource, default_controller)
         actionsMap.edit = nil
     end
 
-    if (only ~= nil) then
-        for k, _ in pairs(actionsMap) do
-            for _, v in pairs(only) do
-                if (k ~= v) then
+    if only ~= nil then
+        if #only == 0 then
+            actionsMap = {}
+        else
+            for k, _ in pairs(actionsMap) do
+                local keep = false
+                for _, v in pairs(only) do
+                    if (k == v) then
+                        keep = true
+                    end
+                end
+                if not keep then
                     actionsMap[k] = nil
                 end
             end
         end
     end
-    if (except ~= nil) then -- remove the except
+    if except ~= nil then -- remove the except
         for _, v in pairs(except) do
             actionsMap[v] = nil
         end
@@ -139,7 +147,7 @@ local function build_rest_actions(only, except, resource, default_controller)
     local url = nil
     local method = nil
     local controller = nil
-    if (actionsMap.add) then -- make sure action "add" has higher priority than action "show"
+    if actionsMap.add then -- make sure action "add" has higher priority than action "show"
         url, controller = build_url_and_controller("add", resource, default_controller)
         table_insert(result, Rule:new():init({"get", url, controller, "add"}))
         actionsMap.add = nil
@@ -157,7 +165,7 @@ local function build_resource(resource, options)
     local resource = StringHelper.capitalize(Pluralize.singular(resource))
     local rules = build_rest_actions(options.only, options.except, resource, options.controller)
 
-    if (options.members ~= nil) then -- add the members
+    if options.members ~= nil then -- add the members
         for _, member in ipairs(options.members) do
             local method = member[1]
             local action = member[2]
@@ -166,7 +174,7 @@ local function build_resource(resource, options)
         end
     end
 
-    if (options.collections ~= nil) then -- add the collections
+    if options.collections ~= nil then -- add the collections
         for _, collection in ipairs(options.collections) do
             local method = collection[1]
             local action = collection[2]

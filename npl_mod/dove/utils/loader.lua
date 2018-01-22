@@ -28,7 +28,6 @@ function _M.load_files(basedir, patterns)
             else
                 for _, pattern in ipairs(patterns) do
                     if (path:match(pattern)) then
-                        log(format("load: %s", path))
                         NPL.load(path)
                         break
                     end

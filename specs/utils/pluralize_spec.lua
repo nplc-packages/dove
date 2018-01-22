@@ -3,9 +3,12 @@ title: Test Pluralize.lua
 author: chenqh
 date: 2017/11/23
 ]]
-NPL.load("dove/specs/spec_helper")
+telescope.load_contexts("specs/spec_helper.lua")
+-- NPL.load("../spec_helper")
 
 local Pluralize = commonlib.gettable("Dove.Utils.Pluralize")
+
+assert(Pluralize, "nil Pluralizes")
 
 local basic_tests = {
     -- Uncountables.
@@ -600,74 +603,102 @@ local basic_tests = {
     {"xMan", "xMen"}
 }
 
---[[
-test_cases = {
-    [single, plural
-    ...
-}
-]]
-local function test(test_cases)
-    for i = 1, #test_cases, 1 do
-        single = test_cases[i][1]
-        plural = test_cases[i][2]
-        assert(
-            Pluralize.plural(single) == plural,
-            single .. ".." .. plural .. "----plural:" .. Pluralize.plural(single)
+describe(
+    "pluralize library",
+    function()
+        local contexts
+        for _, test_case in ipairs(basic_tests) do
+            local single = test_case[1]
+            local plural = test_case[2]
+            context(
+                format("single: %s, plural: %s", single, plural),
+                function ()
+                    it(
+                        "should match plural",
+                        function() assert_equal(Pluralize.plural(single), plural) end
+                    )
+                    it(
+                        "should match single",
+                        function() assert_equal(Pluralize.singular(plural), single) end
+                    )
+                end
+            )
+        end
+
+        context(
+            "is plural",
+            function()
+                it(
+                    "words should be plural",
+                    function() assert_equal(Pluralize.is_plural("words"), true) end
+                )
+                it(
+                    "word should not be plural",
+                    function() assert_equal(Pluralize.is_plural("word"), false) end
+                )
+            end
         )
-        assert(
-            Pluralize.singular(plural) == single,
-            single .. ".." .. plural .. "----singular:" .. Pluralize.singular(plural)
+
+        context(
+            "is singular",
+            function()
+                it(
+                    "words should not be single",
+                    function() assert_equal(Pluralize.is_singular("words"), false) end
+                )
+                it(
+                    "word should be single",
+                    function() assert_equal(Pluralize.is_singular("word"), true) end
+                )
+            end
+        )
+
+        context(
+            "rules",
+            function()
+                it(
+                    "should follow new plural rule",
+                    function()
+                        assert_equal(Pluralize.plural("word"), "words")
+                        Pluralize.add_pluralization_rule("word", "wordiii")
+                        assert_equal(Pluralize.plural("word"), "wordiii")
+                    end
+                )
+                it(
+                    "should follow new singular rule",
+                    function()
+                        assert_equal(Pluralize.singular("words"), "word")
+                        Pluralize.add_singularization_rule("words", "wordiii")
+                        assert_equal(Pluralize.singular("words"), "wordiii")
+                    end
+                )
+                it(
+                    "should follow all new rules",
+                    function()
+                        assert_equal(Pluralize.plural("test"), "tests")
+                        local new_rules = {
+                            pluralization_rules = {
+                                {"word", "wordsss"}
+                            },
+                            singularization_rules = {
+                                {"words", "wordy"}
+                            },
+                            uncountable_reg_rules = {
+                                "^test$"
+                            },
+                            irregular_plurals = {
+                                {"bus", "buss"}
+                            }
+                        }
+                        Pluralize.add_rules(new_rules)
+                        assert_equal(Pluralize.plural("word"), "wordsss")
+                        assert_equal(Pluralize.singular("words"), "wordy")
+                        assert_equal(Pluralize.plural("test"), "test")
+                        assert_equal(Pluralize.plural("bus"), "buss")
+                        assert_equal(Pluralize.singular("buss"), "bus")
+                    end
+                )
+            end
         )
     end
-end
-
-local function test_checkers()
-    -- test is_plural
-    assert(Pluralize.is_plural("words") == true)
-    assert(Pluralize.is_plural("word") == false)
-    -- test is_singular
-    assert(Pluralize.is_singular("word") == true)
-    assert(Pluralize.is_singular("words") == false)
-end
-
-local function test_rules()
-    -- test add_pluralization_rules
-    assert(Pluralize.plural("word") == "words")
-    Pluralize.add_pluralization_rule("word", "wordiii")
-    assert(Pluralize.plural("word") == "wordiii")
-    -- test add_singularization_rules
-    assert(Pluralize.singular("words") == "word")
-    Pluralize.add_singularization_rule("words", "wordiii")
-    assert(Pluralize.singular("words") == "wordiii")
-
-    assert(Pluralize.plural("test") == "tests")
-    local new_rules = {
-        pluralization_rules = {
-            {"word", "wordsss"}
-        },
-        singularization_rules = {
-            {"words", "wordy"}
-        },
-        uncountable_reg_rules = {
-            "^test$"
-        },
-        irregular_plurals = {
-            {"bus", "buss"}
-        }
-    }
-    Pluralize.add_rules(new_rules)
-    assert(Pluralize.plural("word") == "wordsss")
-    assert(Pluralize.singular("words") == "wordy")
-    assert(Pluralize.plural("test") == "test")
-    assert(Pluralize.plural("bus") == "buss")
-    assert(Pluralize.singular("buss") == "bus")
-end
-
-local function test_all()
-    test(basic_tests)
-    test_checkers()
-    test_rules() -- warning: this line will break the default rules, pls keep it in the end
-    print("Yeah!!! Testing passed!!!")
-end
-
-test_all()
+)

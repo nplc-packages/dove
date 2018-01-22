@@ -38,6 +38,7 @@ function App:start()
     commonlib.servicelog.GetLogger(""):SetLogFile(format("log/%s.log", self.config.env)) -- update log file
     -- 启动web服务器
     WebServer:Start("app", "0.0.0.0", self.config.port)
+    log("Application is ready!")
 end
 
 function App:handle(msg)
