@@ -66,14 +66,6 @@ function _M.add(rule)
     table_insert(_M.rules, rule)
 end
 
-function _M.init(source)
-    _M.routes = {} -- recreate
-    build_urls(source.urls)
-    build_namespaces(source.namespaces)
-    build_resources(source.resources)
-    build_rules(source.rules)
-end
-
 function _M.set_api_only(config_value)
     _M.api_only = not (not (config_value))
 end
@@ -84,6 +76,10 @@ function _M.print()
     end
 end
 
+function _M.clear()
+    _M.rules = {}
+end
+
 function _M.parse(method, url)
     local method = method:lower()
     for _, r in ipairs(_M.rules) do
@@ -91,7 +87,6 @@ function _M.parse(method, url)
             return deepcopy(r) -- keep route rules save
         end
     end
-    error("Invalid url: " .. url)
 end
 
 function _M.find_rule(method, url)

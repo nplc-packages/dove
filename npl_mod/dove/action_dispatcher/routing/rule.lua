@@ -36,8 +36,8 @@ end
 
 function _M:generate_url(params)
     local url = self.url
-    for key in self.url:gmatch(":%w*id") do
-        local id_key = key:gsub("^:(%w*id)", "%1")
+    for key in self.url:gmatch(":[%w_]*id") do
+        local id_key = key:gsub("^:([%w_]*id)", "%1")
         if(not params[id_key]) then error(format("Invalid params on Key: %s", id_key)) end
         url = url:gsub(key, params[id_key])
         params[id_key] = nil
@@ -54,15 +54,15 @@ end
 
 -- eg: url "/users/:user_id/projects/:id" will add extra params "id" and "user_id"
 function _M:complete_extra_params(url, params)
-    local extra_keys = self.url:match(":%w*id")
+    local extra_keys = self.url:match(":[%w_]*id")
     if(extra_keys == nil or #extra_keys == 0) then return params end
 
     local rule_url_fragments = StringHelper.split(self.url, "[^/]+")
     local url_fragments = StringHelper.split(url, "[^/]+")
 
     for index, key in ipairs(rule_url_fragments) do
-        if(key:match("^:%w*id$")) then
-            key = key:gsub("^:(%w*id)$", "%1")
+        if(key:match("^:[%w_]*id$")) then
+            key = key:gsub("^:([%w_]*id)$", "%1")
             params[key] = url_fragments[index]
         end
     end

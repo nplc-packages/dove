@@ -19,7 +19,7 @@ function _M.formulize(source)
         return input
     end
     -- replace all :*_id to %w*
-    input = input:gsub(":%a*id", "%%w+")
+    input = input:gsub(":[%w_]*id", "%%w+")
     input = input:gsub("/?$", "/?")
     -- add ^ and $
     return format("^%s$", input)

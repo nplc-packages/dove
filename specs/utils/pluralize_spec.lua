@@ -605,7 +605,6 @@ local basic_tests = {
 describe(
     "pluralize library",
     function()
-        local contexts
         for _, test_case in ipairs(basic_tests) do
             local single = test_case[1]
             local plural = test_case[2]

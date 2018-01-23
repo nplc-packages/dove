@@ -1,52 +1,65 @@
--- --[[
--- title: test route
--- author: chenqh
--- date: 2017/12/11
--- ]]
--- NPL.load("dove/specs/spec_helper")
+NPL.load("specs/spec_helper.lua")
 
--- local Route = commonlib.gettable("Dove.Routing.Route")
+local Router = commonlib.gettable("ActionDispatcher.Routing.Router")
+local RouteHelper = commonlib.gettable("ActionDispatcher.Routing.RouteHelper")
+local Route = commonlib.gettable("ActionDispatcher.Routing.Route")
+local Rule = commonlib.gettable("ActionDispatcher.Routing.Rule")
+local resources = RouteHelper.resources
+local namespace = RouteHelper.namespace
+local scope = RouteHelper.scope
+local url = RouteHelper.url
+local rule = RouteHelper.rule
 
--- local routes = {
---     urls = {
---         {"get", "/", "controller.user", "home"} -- {method, url, controller, action, desc}
---     },
---     rules = {
---         {"get", "^/profile/%w*$", "controller.profiles", "show"}
---     },
---     namespaces = {
---         admin = {
---             resources = {
---                 users = {
---                     except = {"delete"},
---                     members = {
---                         {"post", "change_password"}
---                     }
---                 }
---             }
---         },
---         user = {
---             resources = {
---                 profiles = {
---                     only = {"show", "update", "edit"}
---                 }
---             }
---         }
---     },
---     resources = {
---         users = {
---             only = {},
---             collections = {
---                 {"post", "sign_up"},
---                 {"post", "sign_in"},
---                 {"delete", "sign_out"}
---             },
---             resources = {
---                 works = {
---                     except = {"update", "edit"}
---                 }
---             }
---         }
---     }
--- }
--- Route.init(routes)
+describe(
+    "ActionDispatcher.Routing.Router",
+    function()
+        context(
+            "#url_for",
+            function()
+                before(
+                    function()
+                        RouteHelper.route(resources("repos"))
+                    end
+                )
+                after(
+                    function()
+                        Route.clear()
+                    end
+                )
+
+                it(
+                    "should return generated url",
+                    function()
+                        local url = "/repos/:id"
+                        local params = {id = "1", q = "abc"}
+                        assert_equal(Router.url_for(url, "get", params), "/repos/1?q=abc")
+                    end
+                )
+                it(
+                    "should raise error if params not valid",
+                    function()
+                        local url = "/repos/:id"
+                        local params = {q = "abc"}
+                        assert_error(
+                            function()
+                                Router.url_for(url, "get", params)
+                            end
+                        )
+                    end
+                )
+                it(
+                    "should raise error if url not valid",
+                    function()
+                        local url = "/users/:id"
+                        local params = {q = "abc"}
+                        assert_error(
+                            function()
+                                Router.url_for(url, "get", params)
+                            end
+                        )
+                    end
+                )
+            end
+        )
+    end
+)
