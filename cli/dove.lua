@@ -1,7 +1,7 @@
 #!/usr/bin/env nplc
 NPL.load_package("dove")
 NPL.load("dove/init")
-NPL.load("dove/cli/generator")
+NPL.load("cli/generator.lua")
 
 local table_insert = table.insert
 local table_remove = table.remove

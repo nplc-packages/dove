@@ -26,7 +26,8 @@ local function traversal(env)
     end
 end
 
--- middleware is a string, the name of the middleware lib
+-- Register middleware to dispatcher pipeline follow FIFO strategy
+-- @param middleware is a string, the name of the middleware lib
 function _M.register(middleware)
     if (type(middleware) ~= "string") then
         error("please register with the middleware class name")
@@ -46,6 +47,8 @@ function _M.register(middleware)
     add_service(middleware, middleware_lib)
 end
 
+-- Dispatcher entry, handle the contex from client request
+-- @param ctx is the context of a request
 function _M.handle(ctx)
     xpcall(
         function()
