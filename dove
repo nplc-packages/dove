@@ -48,7 +48,7 @@ local function boot_app(options, ctx)
     keep_server_alive(ctx)
 end
 
-lcoal function show_usage()
+local function show_usage()
     local text =
         [[
 Dove Web Application Framework
