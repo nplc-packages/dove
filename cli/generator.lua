@@ -10,7 +10,9 @@ local function assert_app(app_path)
 end
 
 function _M.gen_app(options)
-    local sample_path = "cli/sample-app/."
+    local package = NPL.PackageManager.package_info("dove")
+    assert(package, "Dove was not loaded!")
+    local sample_path = PathHelper.concat(package.install_dir, "cli/sample-app/.")
     local app_path = lfs.currentdir()
     assert_app(app_path)
     assert(os.execute(format("cp -a '%s' '%s'", sample_path, app_path)))
