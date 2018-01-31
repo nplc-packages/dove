@@ -10,7 +10,7 @@ local function assert_app(app_path)
 end
 
 function _M.gen_app(options)
-    local sample_path = PathHelper.concat("cli/sample-app/.")
+    local sample_path = "cli/sample-app/."
     local app_path = lfs.currentdir()
     assert_app(app_path)
     assert(os.execute(format("cp -a '%s' '%s'", sample_path, app_path)))
