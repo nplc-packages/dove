@@ -1,5 +1,4 @@
 #!/usr/bin/env nplc
-NPL.load_package("dove")
 NPL.load("dove/init")
 NPL.load("cli/generator.lua")
 
@@ -16,9 +15,7 @@ local function assert_options(key, value)
 end
 
 local function create_app(options, ctx)
-    local app_name = options[1]
-    assert_options("app name", app_name)
-    Generator.gen_app(app_name)
+    Generator.gen_app()
 end
 
 local function load_local_project()
@@ -51,6 +48,28 @@ local function boot_app(options, ctx)
     keep_server_alive(ctx)
 end
 
+lcoal function show_usage()
+    local text =
+        [[
+Dove Web Application Framework
+
+Usage: dove [options] [params]
+
+Description:
+  Dove is a simple web appplication framework for npl.
+
+Options:
+
+  help, -h              show this text
+  init, -i              init dove framework on current folder
+  routes, -r            show routes of current app
+  console, -c           load current app with nplc console
+  start, -s             start current app
+
+]]
+    print(text)
+end
+
 return function(ctx)
     local args = deepcopy(ctx.arg)
     local operation = args[1]
@@ -60,15 +79,15 @@ return function(ctx)
 
     table_remove(args, 1)
 
-    if operation == "g" or operation == "generate" then
-        generate(args, ctx)
-    elseif operation == "n" or operation == "new" then
+    if operation == "-h" or operation == "--help" then
+        show_usage()
+    elseif operation == "-i" or operation == "init" then
         create_app(args, ctx)
-    elseif operation == "r" or operation == "routes" then
+    elseif operation == "-r" or operation == "routes" then
         print_routes(args)
-    elseif operation == "c" or operation == "console" then
+    elseif operation == "-c" or operation == "console" then
         open_console(args)
-    elseif operation == "start" then
+    elseif operation == "-s" or operation == "start" then
         boot_app(args, ctx)
     else
         print(format("Invalid operation %s", operation))

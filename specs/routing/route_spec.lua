@@ -183,18 +183,5 @@ describe(
                 )
             end
         )
-
-        -- context(
-        --     "namespace",
-        --     function()
-        --         it(
-        --             "should add namespace to controller",
-        --             function()
-        --                 local rule = Route.find_rule("get", "/admin/users/hello")
-        --                 assert_equal(rule.controller, "Controller.Admin.User")
-        --             end
-        --         )
-        --     end
-        -- )
     end
 )

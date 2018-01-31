@@ -1,0 +1,19 @@
+{
+    ["keywords"] = {
+      [1] = "dove",
+      [2] = "web",
+      [3] = "application",
+      [4] = "framework"
+    },
+    ["version"] = "0.1.0",
+    ["rendme"] = "README.md",
+    ["dependencies"] = {
+      ["telescope"] = {
+        ["package_src"] = "leopoldchen/telescope",
+        ["version"] = "1.0.0"
+      }
+    },
+    ["author"] = "leopoldchen",
+    ["name"] = "dove",
+    ["description"] = "package description",
+  }
