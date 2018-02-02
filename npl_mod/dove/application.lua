@@ -31,13 +31,13 @@ local function load_app()
     Loader.load_files("config/initializers")
 end
 
-local function change_logger_path()
+local function change_logger_path(env)
     local log_dir = PathHelper.concat(lfs.currentdir(), "log")
     local attr = lfs.attributes(log_dir)
     if not attr or attr.mode == "file" then
         lfs.mkdir(log_dir)
     end
-    commonlib.servicelog.GetLogger(""):SetLogFile(format("log/%s.log", self.config.env)) -- update log file
+    commonlib.servicelog.GetLogger(""):SetLogFile(format("log/%s.log", env)) -- update log file
 end
 
 function App:info()
@@ -46,7 +46,7 @@ end
 function App:start()
     NPL.load(format("config/enviroments/%s", self.config.env))
     load_app()
-    change_logger_path()
+    change_logger_path(self.config.env)
     -- 启动web服务器
     WebServer:Start("app", "0.0.0.0", self.config.port)
     log("Application is ready!")
