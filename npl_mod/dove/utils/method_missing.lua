@@ -39,13 +39,13 @@ debug.setmetatable(
         end,
         __index = function(self, name)
             if name ~= field then
-                error("attempt to index a nil value")
+                error("attempt to index a nil value: " .. name)
             end
             return getmetatable(self)[field]
         end,
         __newindex = function(self, name, value)
             if name ~= field then
-                error("attempt to index a nil value")
+                error("attempt to index a nil value: " .. name)
             end
             getmetatable(self)[field] = value
         end
