@@ -40,7 +40,7 @@ function _M:render()
     self.path = load_view_path(self.ctx)
 
     if (self.ctx.request:IsJsonBody()) then
-        self.ctx.response:sendsome(Renderer.render_json(view))
+        self.ctx.response:sendsome(Renderer.render_json(self.ctx, self.data))
     else
         local content = Renderer.render_template(self.ctx, self.data, self.path)
         if (self.layout.enable) then
