@@ -49,7 +49,7 @@ function App:start()
     change_logger_path(self.config.env)
     -- 启动web服务器
     WebServer:Start("app", "0.0.0.0", self.config.port)
-    log("Application is ready!")
+    log("Application is ready on port " .. self.config.port)
 end
 
 function App:handle(msg)

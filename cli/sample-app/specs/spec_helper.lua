@@ -1,0 +1,2 @@
+
+NPL.load("dove/init")
