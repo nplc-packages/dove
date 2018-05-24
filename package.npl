@@ -9,7 +9,7 @@
     ["rendme"] = "README.md",
     ["dependencies"] = {
       ["telescope"] = {
-        ["package_src"] = "leopoldchen/telescope",
+        ["package_src"] = "nplc-packages/telescope",
         ["version"] = "1.0.0"
       }
     },
