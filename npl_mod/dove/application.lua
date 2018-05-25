@@ -16,7 +16,8 @@ App.config = {
     layout = {
         default_template = "application_layout",
         enable = true
-    }
+    },
+    custom = {}
     -- default_template = nil
     -- default_template_file = nil
 }
@@ -44,7 +45,7 @@ function App:info()
 end
 
 function App:start()
-    NPL.load(format("config/enviroments/%s", self.config.env))
+    NPL.load(format("config/environments/%s.lua", self.config.env))
     load_app()
     change_logger_path(self.config.env)
     -- 启动web服务器
