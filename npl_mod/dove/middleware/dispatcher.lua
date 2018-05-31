@@ -14,16 +14,18 @@ local function add_to_pipeline(middleware)
 end
 
 local function add_service(middleware, lib)
-    if (_M.services[middleware] ~= nil) then
-        log(format("warning: service %s already existed, please check if there are some mistakes.", middleware))
-    end
     _M.services[middleware] = lib
 end
 
-local function traversal(env)
-    for _, middleware in ipairs(_M.pipeline) do
-        _M.services[middleware].handle(env)
+local function traversal(ctx)
+    local function dispatch(i)
+        local middleware = _M.pipeline[i]
+        if (middleware) then
+            _M.services[middleware].handle(ctx)
+            dispatch(i + 1)
+        end
     end
+    dispatch(1)
 end
 
 -- Register middleware to dispatcher pipeline follow FIFO strategy
@@ -45,6 +47,11 @@ function _M.register(middleware)
     end
     add_to_pipeline(middleware)
     add_service(middleware, middleware_lib)
+end
+
+-- alias of register
+function _M.use(middleware)
+    return _M.register(middleware)
 end
 
 -- Dispatcher entry, handle the contex from client request

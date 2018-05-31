@@ -8,7 +8,7 @@ NPL.load("./dispatcher")
 
 local base = commonlib.inherit(nil, "Dove.Middleware.Base")
 
-function base.handle(env)
+function base.handle(ctx)
     error("must implement the 'handle' method for your middleware")
 end
 

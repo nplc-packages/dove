@@ -6,6 +6,7 @@
 - nplc init your_app
 - nplc install tatfook/dove --version=0.1.0 --local
 - nplc dove init
+- setup your .env file
 - nplc dove start
 - localhost:8088
 

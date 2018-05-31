@@ -4,6 +4,7 @@ author: chenqh
 date: 2017/12/10
 desc: basic handler for web application, will handle all client requestes
 ]]
+NPL.load("dotenv")
 local App = commonlib.inherit(nil, "Dove.Application")
 local Loader = commonlib.gettable("Dove.Utils.Loader")
 local Dispatcher = commonlib.gettable("Dove.Middleware.Dispatcher")
@@ -11,6 +12,7 @@ local PathHelper = commonlib.gettable("Dove.Utils.PathHelper")
 local lfs = commonlib.Files.GetLuaFileSystem()
 
 App.config = {
+    dotenv = ".env",
     env = "development",
     port = "8088",
     layout = {
@@ -45,6 +47,7 @@ function App:info()
 end
 
 function App:start()
+    Dotenv.load(self.config.dotenv)
     NPL.load(format("config/environments/%s.lua", self.config.env))
     load_app()
     change_logger_path(self.config.env)

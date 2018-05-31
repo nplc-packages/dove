@@ -5,9 +5,13 @@
       [3] = "application",
       [4] = "framework"
     },
-    ["version"] = "0.1.0",
-    ["rendme"] = "README.md",
+    ["version"] = "0.2.0",
+    ["readme"] = "README.md",
     ["dependencies"] = {
+      ["dotenv"] = {
+        ["package_src"] = "nplc-packages/dotenv-npl",
+        ["version"] = "1.0.0"
+      },
       ["telescope"] = {
         ["package_src"] = "nplc-packages/telescope",
         ["version"] = "1.0.0"
@@ -15,5 +19,5 @@
     },
     ["author"] = "leopoldchen",
     ["name"] = "dove",
-    ["description"] = "package description",
+    ["description"] = "a npl web development framework",
   }
