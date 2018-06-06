@@ -65,7 +65,11 @@ function _M.handle(ctx)
             log("error: Dispatcher.traversal failed.")
             log(e)
             log(debug.traceback())
-            ctx.response:send(format("exception: %s \n debug: %s", e, debug.traceback()))
+            if APP.config.env ~= 'production' then
+                ctx.response:send(format("exception: %s \n debug: %s", e, debug.traceback()))
+            else
+                ctx.response:status(500):send("")
+            end
         end
     )
 

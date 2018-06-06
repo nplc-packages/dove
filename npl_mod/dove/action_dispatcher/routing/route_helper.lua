@@ -55,7 +55,7 @@ function _M.namespace(name, rules)
     rules = join_rules(rules)
     for i = 1, #rules do
         rules[i].url = format("%s/%s", name, rules[i].url)
-        rules[i].controller = format("%s.%s", StringHelper.capitalize(name), rules[i].controller)
+        rules[i].controller = format("%s.%s", StringHelper.classify(name), rules[i].controller)
     end
 
     return rules
@@ -68,7 +68,7 @@ function _M.scope(name, options, rules)
     for i = 1, #rules do
         rules[i].url = format("%s/%s", name, rules[i].url)
         if options.controller then
-            rules[i].controller = format("%s.%s", StringHelper.capitalize(name), rules[i].controller)
+            rules[i].controller = format("%s.%s", StringHelper.classify(name), rules[i].controller)
         end
     end
 
@@ -162,7 +162,7 @@ local function build_rest_actions(only, except, resource, default_controller)
 end
 
 local function build_resource(resource, options)
-    local resource = StringHelper.capitalize(Pluralize.singular(resource))
+    local resource = StringHelper.classify(Pluralize.singular(resource))
     local rules = build_rest_actions(options.only, options.except, resource, options.controller)
 
     if options.members ~= nil then -- add the members

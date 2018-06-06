@@ -15,7 +15,7 @@ local _M = commonlib.gettable("ActionDispatcher.Routing.Router")
 
 function _M.handle(ctx)
     local request = ctx.request
-    local url = request:url()
+    local url = request.relpath
     local method = request:GetMethod()
     local params = request:getparams() or {}
     local rule = Route.parse(method, url)
