@@ -10,6 +10,7 @@ local Loader = commonlib.gettable("Dove.Utils.Loader")
 local Dispatcher = commonlib.gettable("Dove.Middleware.Dispatcher")
 local PathHelper = commonlib.gettable("Dove.Utils.PathHelper")
 local lfs = commonlib.Files.GetLuaFileSystem()
+local AppFileWatcher = commonlib.gettable("NPL.AppFileWatcher")
 
 App.config = {
     dotenv = ".env",
@@ -19,7 +20,18 @@ App.config = {
         default_template = "application_layout",
         enable = true
     },
-    custom = {}
+    custom = {},
+    file_watcher = {
+        enabled = false,
+        monitor_directories = {
+            "app",
+            "config"
+        },
+        monitored_files = {
+            ["lua"] = true,
+            ["npl"] = true
+        }
+    }
     -- default_template = nil
     -- default_template_file = nil
 }
@@ -43,6 +55,16 @@ local function change_logger_path(env)
     commonlib.servicelog.GetLogger(""):SetLogFile(format("log/%s.log", env)) -- update log file
 end
 
+local function load_file_watcher(config)
+    if config.enabled then
+        local file_watcher = AppFileWatcher:new():init(config.monitored_files)
+        for _, dir in pairs(config.monitor_directories) do
+            file_watcher:monitor_directory(dir)
+        end
+        print('file watcher is enabled')
+    end
+end
+
 function App:info()
 end
 
@@ -51,6 +73,7 @@ function App:start()
     NPL.load(format("config/environments/%s.lua", self.config.env))
     load_app()
     change_logger_path(self.config.env)
+    load_file_watcher(self.config.file_watcher)
     -- 启动web服务器
     WebServer:Start("app", "0.0.0.0", self.config.port)
     log("Application is ready on port " .. self.config.port)
