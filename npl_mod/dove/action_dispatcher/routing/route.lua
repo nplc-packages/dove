@@ -90,7 +90,7 @@ function _M.parse(method, url)
 end
 
 function _M.find_rule(method, url)
-    local temp = StringHelper.split(url, "[^#]+")
+    local temp = StringHelper.split(url, "#")
     local rule = nil
     if (#temp == 2) then -- controller#action
         local controller = temp[1]

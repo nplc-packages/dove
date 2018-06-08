@@ -57,8 +57,8 @@ function _M:complete_extra_params(url, params)
     local extra_keys = self.url:match(":[%w_]*id")
     if(extra_keys == nil or #extra_keys == 0) then return params end
 
-    local rule_url_fragments = StringHelper.split(self.url, "[^/]+")
-    local url_fragments = StringHelper.split(url, "[^/]+")
+    local rule_url_fragments = StringHelper.split(self.url, "/")
+    local url_fragments = StringHelper.split(url, "/")
 
     for index, key in ipairs(rule_url_fragments) do
         if(key:match("^:[%w_]*id$")) then

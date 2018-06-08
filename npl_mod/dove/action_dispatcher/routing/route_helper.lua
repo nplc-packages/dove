@@ -22,10 +22,9 @@ local Route = commonlib.gettable("ActionDispatcher.Routing.Route")
 local Pluralize = commonlib.gettable("Dove.Utils.Pluralize")
 local StringHelper = commonlib.gettable("Dove.Utils.StringHelper")
 local Rule = commonlib.gettable("ActionDispatcher.Routing.Rule")
-local table_insert = table.insert
-local table_concat = table.concat
-local singular = Pluralize.singular
-local plural = Pluralize.plural
+local table_insert, table_concat = table.insert, table.concat
+local singular, plural = Pluralize.singular, Pluralize.plural
+local str_lower, str_upper = string.lower, string.upper
 
 local function join_rules(rules_array)
     local rules = {}
@@ -95,7 +94,7 @@ local function build_url_and_controller(action, resource, default_controller, is
     local controller_stack = {}
     local url_stack = {}
     table_insert(controller_stack, singular(resource))
-    table_insert(url_stack, plural(resource:lower()))
+    table_insert(url_stack, plural(str_lower(StringHelper.decamelize(resource))))
     table_insert(url_stack, url_tail(action, isMember))
 
     local url = table_concat(url_stack, "/")

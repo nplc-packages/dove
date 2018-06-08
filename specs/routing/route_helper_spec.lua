@@ -105,6 +105,49 @@ describe(
             end
         )
 
+
+        context(
+            "#resources with dash",
+            function()
+                before(
+                    function()
+                        RouteHelper.route(
+                            resources("dash_blobs"),
+                            resources(
+                                "dash_repos",
+                                {
+                                    only = {"index", "create"},
+                                    except = {"create"}
+                                },
+                                {
+                                    resources("files")
+                                }
+                            )
+                        )
+                    end
+                )
+                context(
+                    "test",
+                    function()
+                        it(
+                            "should add resoruces to route rule",
+                            function()
+                                assert_not_equal(Route.parse("get", "/dash_blobs"), nil)
+                            end
+                        )
+                        it(
+                            "should keep the 'only' option, and drop the others",
+                            function()
+                                assert_not_equal(Route.parse("get", "/dash_repos"), nil)
+                                assert_equal(Route.parse("get", "/dash_repos/:id"), nil)
+                                assert_equal(Route.parse("post", "/dash_repos"), nil)
+                            end
+                        )
+                    end
+                )
+            end
+        )
+
         context(
             "#namespace",
             function()

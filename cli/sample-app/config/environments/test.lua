@@ -1,2 +1,3 @@
-local custom_config = APP.config.custom
--- add your custom configurations here
+local config = APP.config
+
+config.file_watcher.enabled = false
